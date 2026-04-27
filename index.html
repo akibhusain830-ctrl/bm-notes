@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BizMathPrep — GU B.Com 2nd Sem</title>
+<meta name="description" content="Business Mathematics exam prep — GU B.Com 2nd Semester">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ─────────────────────────────── */
+:root{
+  --bg:         #141414;
+  --surface:    #1c1c1c;
+  --surface2:   #242424;
+  --border:     #2e2e2e;
+  --border2:    #282828;
+  --text:       #dcdcdc;
+  --text2:      #909090;
+  --text3:      #555555;
+  --accent:     #8b72f0;
+  --accent-glow:rgba(139,114,240,.15);
+  --blue:       #38bdf8;
+  --green:      #34d399;
+  --gold:       #fbbf24;
+  --red:        #f87171;
+  --pink:       #f472b6;
+  --orange:     #fb923c;
+  --sidebar-w:  248px;
+  --top-h:      56px;
+  --radius:     10px;
+  --radius-lg:  14px;
+}
+
+/* ── BASE ───────────────────────────────── */
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html{font-size:16px;}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.6;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ── TOPBAR ─────────────────────────────── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;
+  height:var(--top-h);
+  background:rgba(12,12,21,.94);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;
+  padding:0 16px;gap:12px;
+  z-index:200;
+}
+#menu-btn{
+  display:none;
+  width:36px;height:36px;border-radius:8px;
+  background:transparent;border:none;
+  align-items:center;justify-content:center;
+  cursor:pointer;flex-shrink:0;padding:6px;
+  gap:5px;flex-direction:column;
+}
+#menu-btn span{
+  display:block;width:20px;height:2px;
+  background:var(--text2);border-radius:2px;
+  transition:all .25s;
+}
+#menu-btn:hover span{background:var(--text);}
+#logo{
+  font-size:15px;font-weight:700;letter-spacing:-.3px;
+  background:linear-gradient(120deg,#c4b5fd 0%,#93c5fd 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  white-space:nowrap;flex-shrink:0;line-height:1;
+}
+#logo sub{
+  font-size:10px;font-weight:400;
+  -webkit-text-fill-color:var(--text3);
+  vertical-align:middle;margin-left:5px;
+}
+#search-wrap{flex:1;max-width:420px;position:relative;}
+#search{
+  width:100%;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:7px 14px 7px 34px;
+  color:var(--text);font-size:13px;
+  font-family:inherit;outline:none;
+  transition:border-color .2s,background .2s;
+}
+#search::placeholder{color:var(--text3);}
+#search:focus{border-color:var(--accent);background:var(--surface);}
+#search-icon{
+  position:absolute;left:11px;top:50%;
+  transform:translateY(-50%);
+  font-size:13px;opacity:.4;pointer-events:none;
+}
+#reading-bar{
+  position:fixed;top:var(--top-h);left:0;right:0;
+  height:2px;background:linear-gradient(90deg,var(--accent),var(--blue));
+  transform-origin:left;transform:scaleX(0);
+  transition:transform .08s linear;z-index:199;
+}
+
+/* ── LAYOUT ─────────────────────────────── */
+#layout{
+  display:flex;
+  padding-top:var(--top-h);
+  min-height:100vh;
+}
+
+/* ── SIDEBAR ────────────────────────────── */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:149;backdrop-filter:blur(2px);}
+#sidebar{
+  position:fixed;
+  top:var(--top-h);left:0;bottom:0;
+  width:var(--sidebar-w);
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  overflow-y:auto;
+  padding:12px 10px 24px;
+  z-index:150;
+  display:flex;flex-direction:column;gap:2px;
+}
+#sidebar::-webkit-scrollbar{width:0;}
+
+.s-label{
+  font-size:10px;font-weight:600;
+  letter-spacing:.09em;text-transform:uppercase;
+  color:var(--text3);padding:12px 10px 6px;
+}
+.s-label:first-child{padding-top:4px;}
+
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 10px;border-radius:var(--radius);
+  cursor:pointer;transition:background .15s;
+  border:none;background:transparent;width:100%;text-align:left;
+  color:var(--text2);
+}
+.nav-item:hover{background:rgba(255,255,255,.04);color:var(--text);}
+.nav-item.active{background:var(--accent-glow);color:var(--text);}
+.nav-item.active .n-icon{background:rgba(124,90,246,.25);}
+
+.n-icon{
+  width:30px;height:30px;border-radius:7px;
+  background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+  transition:background .15s;
+}
+.n-text{flex:1;min-width:0;}
+.n-name{font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.3;}
+.n-meta{font-size:11px;color:var(--text3);margin-top:1px;}
+
+.s-divider{height:1px;background:var(--border);margin:8px 6px;}
+
+/* ── MAIN ───────────────────────────────── */
+#main{
+  flex:1;
+  margin-left:var(--sidebar-w);
+  height:calc(100vh - var(--top-h));
+  overflow-y:auto;
+  overflow-x:hidden;
+  scroll-behavior:smooth;
+}
+#page{
+  max-width:680px;
+  margin:0 auto;
+  padding:36px 28px 80px;
+}
+
+/* ── WELCOME ────────────────────────────── */
+#welcome{text-align:left;padding:48px 0 16px;}
+.welcome-emoji{font-size:40px;margin-bottom:14px;}
+#welcome h1{
+  font-size:26px;font-weight:700;letter-spacing:-.5px;
+  background:linear-gradient(120deg,#e0e0e0 30%,#b0a0ff 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  margin-bottom:8px;
+}
+#welcome p{color:var(--text2);font-size:15px;max-width:480px;margin:0 0 28px;line-height:1.7;}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
+.g-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:16px;cursor:pointer;
+  transition:border-color .15s,transform .15s,box-shadow .15s;
+  text-align:left;
+}
+.g-card:hover{
+  border-color:rgba(124,90,246,.5);
+  transform:translateY(-2px);
+  box-shadow:0 6px 20px rgba(124,90,246,.1);
+}
+.g-card:active{transform:translateY(0);}
+.g-emoji{font-size:22px;margin-bottom:10px;}
+.g-title{font-size:13px;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:3px;}
+.g-sub{font-size:11px;color:var(--text3);}
+
+/* ── LOADER ─────────────────────────────── */
+#loader{display:none;padding:80px 0;text-align:center;color:var(--text3);}
+.spin{
+  width:32px;height:32px;
+  border:2.5px solid var(--border);
+  border-top-color:var(--accent);
+  border-radius:50%;margin:0 auto 14px;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ── MARKDOWN ───────────────────────────── */
+#content{display:none;}
+
+#content h1{
+  font-size:24px;font-weight:700;letter-spacing:-.4px;
+  color:var(--text);margin-bottom:6px;
+  background:linear-gradient(120deg,#dcdcdc 40%,#b0a0ff 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+#content h2{
+  font-size:15px;font-weight:600;
+  color:#b0a0ff;margin:36px 0 12px;
+  padding-bottom:8px;
+  border-bottom:1px solid var(--border);
+  letter-spacing:-.2px;
+}
+#content h3{
+  font-size:14.5px;font-weight:600;
+  color:var(--text);margin:22px 0 8px;
+}
+#content h4{
+  font-size:11.5px;font-weight:600;letter-spacing:.07em;
+  text-transform:uppercase;color:var(--text3);margin:14px 0 6px;
+}
+#content p{
+  font-size:16px;line-height:1.8;
+  color:#c8c8c8;margin-bottom:12px;
+}
+#content strong{color:#e8e8e8;font-weight:600;}
+#content em{color:#c0b0ff;font-style:italic;}
+#content ul,#content ol{
+  padding-left:20px;margin-bottom:12px;
+}
+#content li{
+  font-size:16px;line-height:1.8;
+  color:#c8c8c8;margin-bottom:6px;
+}
+#content hr{
+  border:none;border-top:1px solid var(--border);
+  margin:28px 0;
+}
+#content a{color:#60a5fa;text-decoration:none;}
+#content blockquote{
+  border-left:3px solid #c8981a;
+  background:rgba(200,152,26,.07);
+  padding:11px 16px;border-radius:0 8px 8px 0;
+  margin:16px 0;
+}
+#content blockquote p{
+  color:#d4a820;font-size:15px;margin:0;font-style:italic;
+}
+#content table{
+  width:100%;border-collapse:collapse;
+  font-size:15px;margin:14px 0;
+  display:block;overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+#content th{
+  background:rgba(139,114,240,.1);
+  padding:9px 14px;text-align:left;
+  border:1px solid var(--border2);
+  color:#b0a0ff;font-weight:600;
+  white-space:nowrap;
+}
+#content td{
+  padding:9px 14px;border:1px solid var(--border2);
+  color:#c8c8c8;vertical-align:top;
+}
+#content tr:nth-child(even) td{background:rgba(255,255,255,.015);}
+#content pre{
+  background:#0a0a16;border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px 16px;
+  overflow-x:auto;margin:12px 0;
+  font-size:12.5px;line-height:1.7;
+  -webkit-overflow-scrolling:touch;
+}
+#content code{
+  font-family:'SF Mono','Fira Code',monospace;
+  font-size:12.5px;color:#7dd3fc;
+  background:rgba(125,211,252,.08);
+  padding:2px 6px;border-radius:4px;
+}
+#content pre code{
+  background:transparent;color:#94a3b8;padding:0;
+}
+
+/* ── SEARCH OVERLAY ─────────────────────── */
+#search-overlay{
+  display:none;
+  position:fixed;
+  top:var(--top-h);left:var(--sidebar-w);right:0;bottom:0;
+  background:var(--bg);z-index:100;
+  overflow-y:auto;padding:24px 20px;
+}
+#search-overlay.open{display:block;}
+.sr-empty{text-align:center;padding:60px 0;color:var(--text3);font-size:14px;}
+.sr-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius);padding:13px 16px;
+  margin-bottom:8px;cursor:pointer;transition:border-color .15s;
+}
+.sr-card:hover{border-color:rgba(124,90,246,.4);}
+.sr-label{font-size:11px;color:#a78bfa;font-weight:600;margin-bottom:3px;}
+.sr-text{font-size:13.5px;color:var(--text);}
+
+/* ── MOBILE ─────────────────────────────── */
+@media(max-width:680px){
+  :root{--sidebar-w:0px;}
+  #menu-btn{display:flex !important;}
+  #sidebar{
+    transform:translateX(-100%);
+    transition:transform .25s cubic-bezier(.4,0,.2,1);
+    width:260px;
+    top:0;padding-top:calc(var(--top-h) + 12px);
+  }
+  #sidebar.open{transform:translateX(0);}
+  #overlay.show{display:block;}
+  #main{margin-left:0;height:calc(100vh - var(--top-h));overflow-y:auto;}
+  #page{padding:24px 16px 80px;}
+  #search-wrap{max-width:none;}
+  #search-overlay{left:0;}
+  #content h1{font-size:20px;}
+  #content h2{font-size:15px;}
+  #content h3{font-size:14px;}
+  #content p,#content li{font-size:13.5px;}
+  #content table{font-size:12px;}
+  #content th,#content td{padding:7px 10px;}
+  .grid{grid-template-columns:1fr 1fr;}
+  #welcome h1{font-size:22px;}
+  #welcome p{font-size:14px;}
+}
+
+/* ── LIGHT MODE IMPROVEMENTS ───────────────── */
+body.light{
+  --bg:#f8fafc;--surface:#ffffff;--surface2:#f1f5f9;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--text2:#334155;--text3:#64748b;
+  --accent:#6366f1;
+}
+body.light #content h1{
+  background:linear-gradient(120deg,#1e293b 30%,#4f46e5 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+body.light #content h2{color:#4f46e5;border-bottom-color:var(--border);font-weight:700;}
+body.light #content h3{color:#1e293b;font-weight:700;}
+body.light #content p,body.light #content li{color:#334155;font-weight:450;}
+body.light #content strong{color:#0f172a;font-weight:700;}
+body.light #content em{color:#4f46e5;}
+body.light #content td,body.light #content th{color:#0f172a;border-color:#e2e8f0;}
+body.light #content th{background:rgba(79,70,229,.05);color:#4f46e5;}
+body.light #content blockquote{background:rgba(245,158,11,.05);border-color:#f59e0b;}
+body.light #content blockquote p{color:#b45309;}
+body.light #content code{background:#f1f5f9;color:#2563eb;border:1px solid #e2e8f0;font-weight:500;}
+body.light #content pre{background:#f1f5f9;border-color:#cbd5e1;box-shadow:inset 0 1px 4px rgba(0,0,0,.02);}
+body.light #content pre code{color:#334155;background:transparent;border:none;}
+body.light #topbar{background:rgba(255,255,255,.9);border-bottom-color:#e2e8f0;box-shadow:0 1px 3px rgba(0,0,0,.05);}
+body.light #logo{background:linear-gradient(120deg,#4f46e5,#2563eb);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+body.light .nav-item{color:#475569;}
+body.light .nav-item:hover{background:#f1f5f9;color:#0f172a;}
+body.light .nav-item.active{background:rgba(99,102,241,.1);color:#4f46e5;box-shadow:0 2px 8px rgba(99,102,241,.05);}
+body.light #sidebar{background:#ffffff;border-right-color:#e2e8f0;box-shadow:2px 0 12px rgba(0,0,0,.02);}
+body.light .g-card{background:#ffffff;border-color:#e2e8f0;box-shadow:0 2px 10px rgba(0,0,0,.03);}
+body.light .g-card:hover{border-color:#6366f1;box-shadow:0 8px 24px rgba(99,102,241,.08);}
+body.light .g-title{color:#1e293b;}
+body.light #welcome h1{background:linear-gradient(120deg,#0f172a 30%,#4f46e5 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+body.light #search{background:#f1f5f9;border-color:#e2e8f0;}
+body.light #search:focus{background:#ffffff;border-color:#6366f1;box-shadow:0 0 0 4px rgba(99,102,241,.1);}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <button id="menu-btn" onclick="toggleSidebar()" aria-label="Open menu">
+  <span></span><span></span><span></span>
+</button>
+  <div id="logo">BizMathPrep <sub>GU B.Com 2nd Sem</sub></div>
+  <div id="search-wrap">
+    <span id="search-icon">🔍</span>
+    <input id="search" type="search" placeholder="Search matrices, LPP, or sets..." autocomplete="off" spellcheck="false">
+  </div>
+</div>
+<div id="reading-bar"></div>
+
+<!-- OVERLAY (mobile) -->
+<div id="overlay" onclick="closeSidebar()"></div>
+
+<!-- LAYOUT -->
+<div id="layout">
+
+  <!-- SIDEBAR -->
+  <nav id="sidebar">
+    <div class="s-label">Units</div>
+    <button class="nav-item" data-file="notes/%23%20%F0%9F%93%90%20BUSINESS%20MATHEMATICS%20%E2%80%94%20COMPLETE%20NOT.md">
+      <div class="n-icon" style="background:rgba(167,139,250,.15)">📘</div>
+      <div class="n-text"><div class="n-name">Complete Revision Notes</div><div class="n-meta">Unit 1-4</div></div>
+    </button>
+    
+    <div class="s-divider"></div>
+    <div class="s-label">Solved Papers</div>
+    <button class="nav-item" data-file="BM_2024_PYQ_Solutions.md">
+      <div class="n-icon" style="background:rgba(96,165,250,.15)">📄</div>
+      <div class="n-text"><div class="n-name">2024 Solved Paper</div><div class="n-meta">Exhaustive Solutions</div></div>
+    </button>
+    
+    <div class="s-divider"></div>
+    <div class="s-label">Predicted Sets</div>
+    <button class="nav-item" data-file="BM_Predicted_Set_1.md">
+      <div class="n-icon" style="background:rgba(52,211,153,.15)">🎯</div>
+      <div class="n-text"><div class="n-name">Predicted Set 1</div><div class="n-meta">Solved Essentials</div></div>
+    </button>
+    <button class="nav-item" data-file="BM_Predicted_Set_2.md">
+      <div class="n-icon" style="background:rgba(52,211,153,.15)">🎯</div>
+      <div class="n-text"><div class="n-name">Predicted Set 2</div><div class="n-meta">Solved Proofs</div></div>
+    </button>
+    <button class="nav-item" data-file="BM_Predicted_Set_3.md">
+      <div class="n-icon" style="background:rgba(52,211,153,.15)">🎯</div>
+      <div class="n-text"><div class="n-name">Predicted Set 3</div><div class="n-meta">Computational</div></div>
+    </button>
+    <button class="nav-item" data-file="BM_Predicted_Set_4.md">
+      <div class="n-icon" style="background:rgba(52,211,153,.15)">🎯</div>
+      <div class="n-text"><div class="n-name">Predicted Set 4</div><div class="n-meta">Matrix Algebra</div></div>
+    </button>
+    <button class="nav-item" data-file="BM_Predicted_Set_5.md">
+      <div class="n-icon" style="background:rgba(52,211,153,.15)">🎯</div>
+      <div class="n-text"><div class="n-name">Predicted Set 5</div><div class="n-meta">Differentiation</div></div>
+    </button>
+    <button class="nav-item" data-file="BM_Predicted_Set_6.md">
+      <div class="n-icon" style="background:rgba(52,211,153,.15)">🎯</div>
+      <div class="n-text"><div class="n-name">Predicted Set 6</div><div class="n-meta">Advanced LPP</div></div>
+    </button>
+    <button class="nav-item" data-file="BM_Predicted_Set_7.md">
+      <div class="n-icon" style="background:rgba(52,211,153,.15)">🎯</div>
+      <div class="n-text"><div class="n-name">Predicted Set 7</div><div class="n-meta">Max/Min Focus</div></div>
+    </button>
+    <button class="nav-item" data-file="BM_Predicted_Set_8.md">
+      <div class="n-icon" style="background:rgba(52,211,153,.15)">🎯</div>
+      <div class="n-text"><div class="n-name">Predicted Set 8</div><div class="n-meta">Determinant Focus</div></div>
+    </button>
+    <button class="nav-item" data-file="BM_Predicted_Set_9.md">
+      <div class="n-icon" style="background:rgba(52,211,153,.15)">🎯</div>
+      <div class="n-text"><div class="n-name">Predicted Set 9</div><div class="n-meta">Business App</div></div>
+    </button>
+    <button class="nav-item" data-file="BM_Predicted_Set_10.md">
+      <div class="n-icon" style="background:rgba(244,114,182,.15)">👑</div>
+      <div class="n-text"><div class="n-name">Predicted Set 10</div><div class="n-meta">Final Mock</div></div>
+    </button>
+  </nav>
+
+  <!-- MAIN -->
+  <main id="main">
+    <div id="page">
+
+      <!-- LOADER -->
+      <div id="loader"><div class="spin"></div><p>Loading...</p></div>
+
+      <!-- WELCOME -->
+      <div id="welcome">
+        <div class="welcome-emoji">📊</div>
+        <h1>BizMathPrep</h1>
+        <p>Complete revision guide for Business Mathematics — GU B.Com 2nd Semester. 10 Predicted Sets + Solved 2024 Paper.</p>
+        <div class="grid">
+          <div class="g-card" onclick="load('BM_2024_PYQ_Solutions.md')">
+            <div class="g-emoji">📄</div>
+            <div class="g-title">2024 Solved Paper</div>
+            <div class="g-sub">With full answers</div>
+          </div>
+          <div class="g-card" onclick="load('BM_Predicted_Set_10.md')">
+            <div class="g-emoji">👑</div>
+            <div class="g-title">Predicted Set 10</div>
+            <div class="g-sub">Final Mock Exam</div>
+          </div>
+          <div class="g-card" onclick="load('notes/%23%20%F0%9F%93%90%20BUSINESS%20MATHEMATICS%20%E2%80%94%20COMPLETE%20NOT.md')">
+            <div class="g-emoji">📘</div>
+            <div class="g-title">Revision Notes</div>
+            <div class="g-sub">Units 1 to 4</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTENT -->
+      <div id="content"></div>
+
+    </div>
+  </main>
+</div>
+
+<!-- SEARCH OVERLAY -->
+<div id="search-overlay">
+  <div id="search-results"></div>
+</div>
+
+<script>
+const FILES = {
+  'Revision Notes': 'notes/%23%20%F0%9F%93%90%20BUSINESS%20MATHEMATICS%20%E2%80%94%20COMPLETE%20NOT.md',
+  '2024 Solved Paper': 'BM_2024_PYQ_Solutions.md',
+  'Predicted Set 1': 'BM_Predicted_Set_1.md',
+  'Predicted Set 2': 'BM_Predicted_Set_2.md',
+  'Predicted Set 3': 'BM_Predicted_Set_3.md',
+  'Predicted Set 4': 'BM_Predicted_Set_4.md',
+  'Predicted Set 5': 'BM_Predicted_Set_5.md',
+  'Predicted Set 6': 'BM_Predicted_Set_6.md',
+  'Predicted Set 7': 'BM_Predicted_Set_7.md',
+  'Predicted Set 8': 'BM_Predicted_Set_8.md',
+  'Predicted Set 9': 'BM_Predicted_Set_9.md',
+  'Predicted Set 10': 'BM_Predicted_Set_10.md',
+};
+
+const idx = {};
+Object.entries(FILES).forEach(([name, path]) => {
+  fetch(path).then(r => r.text()).then(t => idx[name] = t).catch(() => {});
+});
+
+function load(path) {
+  const welcome  = document.getElementById('welcome');
+  const content  = document.getElementById('content');
+  const loader   = document.getElementById('loader');
+  const mainEl   = document.getElementById('main');
+
+  document.querySelectorAll('.nav-item').forEach(b =>
+    b.classList.toggle('active', b.dataset.file === path)
+  );
+  welcome.style.display = 'none';
+  content.style.display = 'none';
+  loader.style.display  = 'block';
+  mainEl.scrollTop = 0;
+  document.title = path.replace(/_/g,' ').replace('.md','') + ' — BizMathPrep';
+
+  fetch(path)
+    .then(r => { if (!r.ok) throw 0; return r.text(); })
+    .then(md => {
+      loader.style.display  = 'none';
+      content.style.display = 'block';
+      // Strip leading emoji+space from headings for cleaner rendering
+      const cleaned = md.replace(/^(#{1,4}\s*)[🔴🟡🟢🔵⭐✅❌📌📝🎯⚡🏆📈📉🚀💡🔍📊💰🔧🧪🎁🤝📰📬💻🛒🏪💎📋🔥]+\s*/gm, '$1');
+      content.innerHTML = marked.parse(cleaned);
+    })
+    .catch(() => {
+      loader.style.display  = 'none';
+      content.style.display = 'block';
+      content.innerHTML = `<p style="color:var(--text3);text-align:center;padding:60px 0">⚠️ Could not load file.<br><small>Make sure all .md files are in the parent folder.</small></p>`;
+    });
+
+  closeSidebar();
+}
+
+// Nav
+document.querySelectorAll('.nav-item[data-file]').forEach(b =>
+  b.addEventListener('click', () => load(b.dataset.file))
+);
+
+// Reading progress
+const bar = document.getElementById('reading-bar');
+document.getElementById('main').addEventListener('scroll', function () {
+  const p = this.scrollTop / (this.scrollHeight - this.clientHeight) || 0;
+  bar.style.transform = `scaleX(${Math.min(p, 1)})`;
+}, { passive: true });
+
+// Sidebar (mobile)
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('show');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('show');
+}
+
+// Search
+const searchEl  = document.getElementById('search');
+const overlay   = document.getElementById('search-overlay');
+const resultsEl = document.getElementById('search-results');
+
+searchEl.addEventListener('input', function () {
+  const q = this.value.trim().toLowerCase();
+  if (!q || q.length < 2) { overlay.classList.remove('open'); return; }
+  overlay.classList.add('open');
+
+  const hits = [];
+  Object.entries(idx).forEach(([chapter, text]) => {
+    text.split('\n').forEach(line => {
+      if ((line.match(/^#{2,3} /) || line.startsWith('**')) && line.toLowerCase().includes(q)) {
+        hits.push({ chapter, line: line.replace(/^#+\s*/, '').replace(/\*\*/g, '') });
+      }
+    });
+  });
+
+  if (!hits.length) {
+    resultsEl.innerHTML = `<p class="sr-empty">No results for "<strong>${q}</strong>"</p>`;
+    return;
+  }
+  resultsEl.innerHTML = hits.slice(0, 25).map(h =>
+    `<div class="sr-card" onclick="goTo('${h.chapter}')">
+       <div class="sr-label">${h.chapter}</div>
+       <div class="sr-text">${h.line}</div>
+     </div>`
+  ).join('');
+});
+
+function goTo(name) {
+  overlay.classList.remove('open');
+  searchEl.value = '';
+  const p = FILES[name]; if (p) load(p);
+}
+
+searchEl.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { overlay.classList.remove('open'); searchEl.value = ''; }
+});
+document.addEventListener('pointerdown', e => {
+  if (!e.target.closest('#search-wrap') && !e.target.closest('#search-overlay'))
+    overlay.classList.remove('open');
+});
+
+// Restore saved theme
+if(localStorage.getItem('theme')==='light'){
+  document.body.classList.add('light');
+  document.getElementById('theme-btn').textContent='☀️';
+}
+</script>
+
+<!-- BACK TO TOP -->
+<button id="back-top" onclick="document.getElementById('main').scrollTo({top:0,behavior:'smooth'})" title="Back to top" style="
+  display:none;position:fixed;bottom:72px;right:20px;z-index:300;
+  width:38px;height:38px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--border);
+  color:var(--text2);font-size:18px;cursor:pointer;
+  align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.3);
+  transition:all .2s;
+">↑</button>
+
+<script>
+document.getElementById('main').addEventListener('scroll', function(){
+  const btn = document.getElementById('back-top');
+  btn.style.display = this.scrollTop > 400 ? 'flex' : 'none';
+}, {passive:true});
+</script>
+
+<!-- LIGHT/DARK TOGGLE -->
+<button id="theme-btn" onclick="toggleTheme()" title="Toggle light/dark mode" style="
+  position:fixed;bottom:20px;right:20px;z-index:300;
+  width:42px;height:42px;border-radius:50%;
+  background:var(--surface);border:1px solid var(--border);
+  font-size:18px;cursor:pointer;display:flex;
+  align-items:center;justify-content:center;
+  box-shadow:0 4px 12px rgba(0,0,0,.4);
+  transition:transform .15s;
+" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">🌙</button>
+
+<!-- 20-20-20 REMINDER -->
+<div id="reminder" style="
+  display:none;position:fixed;bottom:76px;right:16px;z-index:300;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:14px 16px;max-width:230px;
+  box-shadow:0 8px 24px rgba(0,0,0,.4);font-size:13px;
+">
+  <div style="font-weight:600;color:var(--text);margin-bottom:4px;">👀 20-20-20 Break</div>
+  <div style="color:var(--text2);line-height:1.6;">Look at something 20 feet away for 20 seconds to rest your eyes.</div>
+  <button onclick="document.getElementById('reminder').style.display='none'" style="margin-top:10px;padding:5px 12px;border-radius:6px;border:1px solid var(--border);background:var(--accent);color:#fff;font-size:12px;cursor:pointer;">Got it ✓</button>
+</div>
+
+<script>
+function toggleTheme(){
+  const btn = document.getElementById('theme-btn');
+  document.body.classList.toggle('light');
+  btn.textContent = document.body.classList.contains('light') ? '☀️' : '🌙';
+  localStorage.setItem('theme', document.body.classList.contains('light') ? 'light' : 'dark');
+}
+// 20-20-20 reminder every 20 mins
+setTimeout(function remind(){
+  document.getElementById('reminder').style.display='block';
+  setTimeout(()=>document.getElementById('reminder').style.display='none', 15000);
+  setTimeout(remind, 20*60*1000);
+}, 20*60*1000);
+</script>
+</body>
+</html>
